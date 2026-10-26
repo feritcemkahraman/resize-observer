@@ -9,8 +9,20 @@ describe('useResizeObserver', () => {
     const textNode = document.createTextNode('sample') as any;
     expect(() => {
       observe(textNode, () => {});
-      unobserve(textNode, () => {});
     }).not.toThrow();
+  });
+
+  it('should ignore a non-Element target during cleanup', () => {
+    const textNode = document.createTextNode('sample') as any;
+    const listener = () => {};
+    elementListeners.set(textNode, new Set([listener]));
+
+    try {
+      expect(() => unobserve(textNode, listener)).not.toThrow();
+      expect(elementListeners.get(textNode)).toEqual(new Set([listener]));
+    } finally {
+      elementListeners.delete(textNode);
+    }
   });
 
   it('should observe latest element when target getter closes over stateful ref value', async () => {

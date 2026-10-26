@@ -13,5 +13,11 @@ global.ResizeObserver = class ResizeObserver {
     this.callback([{ target }]);
   }
 
-  unobserve() {}
+  unobserve(target) {
+    if (!target || !(target instanceof Element)) {
+      throw new TypeError(
+        "Failed to execute 'unobserve' on 'ResizeObserver': parameter 1 is not of type 'Element'.",
+      );
+    }
+  }
 };
